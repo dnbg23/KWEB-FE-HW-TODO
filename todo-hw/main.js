@@ -29,15 +29,34 @@ function addTodo(text) {
 
   taskText.textContent = text;
 
+  // delete button
+  deleteBtn.textContent = '❌';
+  deleteBtn.style.cursor = 'pointer';
+  deleteBtn.totle = 'Delete Task';
+  deleteBtn.onclick = () => {
+    list.removeChild(li);
+  };
+
   // toggle complete/incomplete
   checkbox.onclick = () => {
     const completed = checkbox.textContent === '☑️';
     checkbox.textContent = completed ? '⬜' : '☑️';
     taskText.style.textDecoration = completed ? 'none' : 'line-through';
     checkbox.title = completed ? 'Complete Task' : 'Uncheck Task'
+
+    //move task to bottom or top
+    list.removeChild(li);
+    if (completed)
+    {
+        list.insertBefore(li, list.firstChild); //move up
+    }
+    else{
+        list.appendChild(li); //move down
+    }
   };
 
   li.appendChild(checkbox);
   li.appendChild(taskText);
+  li.appendChild(deleteBtn);
   list.appendChild(li);
 }
