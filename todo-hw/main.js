@@ -1,7 +1,8 @@
 const input = document.getElementById('todo-input');
 const list = document.getElementById('todo-list');
+const addBtn = document.getElementById('add-btn');
 
-//add on enter
+// Add with Enter
 input.addEventListener('keydown', function (e) {
   if (e.key === 'Enter' && input.value.trim()) {
     addTodo(input.value.trim());
@@ -9,54 +10,75 @@ input.addEventListener('keydown', function (e) {
   }
 });
 
-//add on button click
-addBtn.addEventListener('click', function(){
-    if (input.value.trim()) {
-        addTodo(input.value.trim());
-        input.value = '';
-    }
+// add with Button
+addBtn.addEventListener('click', function () {
+  if (input.value.trim()) {
+    addTodo(input.value.trim());
+    input.value = '';
+  }
 });
 
 function addTodo(text) {
   const li = document.createElement('li');
-  const checkbox = document.createElement('span');
+  li.style.display = 'flex';
+  li.style.alignItems = 'center';
+  li.style.justifyContent = 'space-between';
+  li.style.background = '#f9f9f9';
+  li.style.borderRadius = '6px';
+  li.style.padding = '10px 15px';
+  li.style.marginBottom = '10px';
+
+  // Left side: checkbox + text
+  const leftSide = document.createElement('div');
+  leftSide.style.display = 'flex';
+  leftSide.style.alignItems = 'center';
+  leftSide.style.flex = '1';
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.style.marginRight = '10px';
+  checkbox.title = 'Complete Task';
+
   const taskText = document.createElement('span');
-
-  checkbox.textContent = '⬜'; // unchecked emoji
-  checkbox.style.cursor = 'pointer';
-  checkbox.style.marginRight = '8px';
-  checkbox.title = 'Complete Task'
-
   taskText.textContent = text;
 
-  // delete button
-  deleteBtn.textContent = '❌';
-  deleteBtn.style.cursor = 'pointer';
-  deleteBtn.totle = 'Delete Task';
-  deleteBtn.onclick = () => {
+  checkbox.addEventListener('change', () => {
+    taskText.style.textDecoration = checkbox.checked ? 'line-through' : 'none';
+    checkbox.title = checkbox.checked ? '완료 해제하려면 클릭' : '완료로 표시하려면 클릭';
+
+    // move based on status
+    list.removeChild(li);
+    if (!checkbox.checked) {
+      list.insertBefore(li, list.firstChild);
+    } else {
+      list.appendChild(li);
+    }
+  });
+
+  leftSide.appendChild(checkbox);
+  leftSide.appendChild(taskText);
+
+  // right side - edit and delete
+  const icons = document.createElement('div');
+
+  const edit = document.createElement('span');
+  edit.textContent = '✏️';
+  edit.title = 'Edit Task';
+  edit.style.cursor = 'pointer';
+  edit.style.marginRight = '10px';
+
+  const del = document.createElement('span');
+  del.textContent = '🗑️';
+  del.title = 'Delete Task';
+  del.style.cursor = 'pointer';
+  del.onclick = () => {
     list.removeChild(li);
   };
 
-  // toggle complete/incomplete
-  checkbox.onclick = () => {
-    const completed = checkbox.textContent === '☑️';
-    checkbox.textContent = completed ? '⬜' : '☑️';
-    taskText.style.textDecoration = completed ? 'none' : 'line-through';
-    checkbox.title = completed ? 'Complete Task' : 'Uncheck Task'
+  icons.appendChild(edit);
+  icons.appendChild(del);
 
-    //move task to bottom or top
-    list.removeChild(li);
-    if (completed)
-    {
-        list.insertBefore(li, list.firstChild); //move up
-    }
-    else{
-        list.appendChild(li); //move down
-    }
-  };
-
-  li.appendChild(checkbox);
-  li.appendChild(taskText);
-  li.appendChild(deleteBtn);
+  li.appendChild(leftSide);
+  li.appendChild(icons);
   list.appendChild(li);
 }
