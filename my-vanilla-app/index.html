@@ -1,13 +1,16 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
+    <title>To-Do List</title>
   </head>
   <body>
-    <div id="app"></div>
+    <h1>To-Do List App</h1>
+    <div class="card">
+      <input id="todo-input" placeholder="할 일을 입력하세요" />
+      <button id="add-btn">추가</button>
+    </div>
+    <div id="todo-list"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -1,24 +1,44 @@
-import './style.css'
-import typescriptLogo from './typescript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
+type Todo = {
+  id: number;
+  text: string;
+};
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more
-    </p>
-  </div>
-`
+let todos: Todo[] = [];
+let id = 0;
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+const input = document.getElementById('todo-input') as HTMLInputElement;
+const addBtn = document.getElementById('add-btn')!;
+const list = document.getElementById('todo-list')!;
+
+function render() {
+  list.innerHTML = '';
+  todos.forEach(todo => {
+    const div = document.createElement('div');
+    div.className = 'todo';
+
+    const span = document.createElement('span');
+    span.textContent = todo.text;
+
+    const btn = document.createElement('button');
+    btn.textContent = '☑️';
+    btn.onclick = () => {
+      todos = todos.filter(t => t.id !== todo.id);
+      render();
+    };
+
+    div.appendChild(btn);
+    div.appendChild(span);
+    list.appendChild(div);
+  });
+}
+
+addBtn.addEventListener('click', () => {
+  if (!input.value.trim()) return;
+  todos.push({ id: ++id, text: input.value });
+  input.value = '';
+  render();
+});
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') addBtn.click();
+});
