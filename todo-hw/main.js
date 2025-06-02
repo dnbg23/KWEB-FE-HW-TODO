@@ -67,6 +67,42 @@ function addTodo(text) {
   edit.style.cursor = 'pointer';
   edit.style.marginRight = '10px';
 
+  // editing function
+  let editing = false;
+  edit.onclick = () => {
+    if (!editing) {
+      // switch to input
+      const inputEdit = document.createElement('input');
+      inputEdit.type = 'text';
+      inputEdit.value = taskText.textContent;
+      inputEdit.style.flex = '1';
+      inputEdit.style.marginRight = '10px';
+
+      // replace span with input
+      leftSide.replaceChild(inputEdit, taskText);
+      inputEdit.focus();
+
+      // save on Enter
+      inputEdit.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          taskText.textContent = inputEdit.value;
+          leftSide.replaceChild(taskText, inputEdit);
+          editing = false;
+        }
+      });
+
+      editing = true;
+    } else {
+      // if clicked again while editing, save manually
+      const inputEdit = leftSide.querySelector('input');
+      if (inputEdit) {
+        taskText.textContent = inputEdit.value;
+        leftSide.replaceChild(taskText, inputEdit);
+        editing = false;
+      }
+    }
+  };
+
   const del = document.createElement('span');
   del.textContent = '🗑️';
   del.title = 'Delete Task';
@@ -74,6 +110,8 @@ function addTodo(text) {
   del.onclick = () => {
     list.removeChild(li);
   };
+
+
 
   icons.appendChild(edit);
   icons.appendChild(del);
